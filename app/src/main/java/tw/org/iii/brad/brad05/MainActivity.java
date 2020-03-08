@@ -9,8 +9,11 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,7 +25,14 @@ public class MainActivity extends AppCompatActivity {
     private Counter counter;
     private TextView clock;
     private UIHandler uiHandler = new UIHandler();
+
     private ListView listView;
+    private SimpleAdapter adapter;      //建構式無法在此做(無法new
+    private LinkedList<HashMap<String,String>> data = new LinkedList<>();
+    private String[] from = {"lap","time1","time2"};        //此處名稱隨意
+    private int[] to = {R.id.lap_rank,R.id.lap_time1,R.id.lap_time2};   //要對到元件
+    private int lapCounter;
+    private int lastHs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initLap(){
-        
+        adapter = new SimpleAdapter(this,data,R.layout.layout_lap,from,to);
+        listView.setAdapter(adapter);
     }
 
     private void changeDisplay(){
@@ -60,11 +71,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void doReset(){
         hs = 0;
+        lastHs = 0;
+        lapCounter = 0;
+        data.clear();
+        adapter.notifyDataSetChanged();
         clock.setText(parseHS(hs));
     }
 
     private void doLap() {
-
+        int dHs = hs - lastHs;
+        lastHs = hs;
+        HashMap<String,String> row = new HashMap<>();
+        row.put(from[0],"lap" + ++lapCounter);
+        row.put(from[1],parseHS(dHs));
+        row.put(from[2],parseHS(hs));
+        data.add(0,row);
+        adapter.notifyDataSetChanged();
     }
 
     public void doRight(View view) {
