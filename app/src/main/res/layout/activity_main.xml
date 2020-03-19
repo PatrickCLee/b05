@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="RESET"
             android:onClick="doLeft"
-        />
+            />
         <Button
             android:id="@+id/rightBtn"
             android:layout_width="0dp"
@@ -38,10 +38,10 @@
             android:onClick="doRight"
             />
     </LinearLayout>
-        <ListView
-            android:id="@+id/listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         />
 
 </LinearLayout>

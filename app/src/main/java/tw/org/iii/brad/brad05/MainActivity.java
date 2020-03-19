@@ -1,5 +1,5 @@
 package tw.org.iii.brad.brad05;
-
+//計時器
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isRunning;
     private Button leftBtn, rightBtn;   //必須在setContentView後才能找到,故無法在此assign
     private Timer timer = new Timer();
-    private int hs;
+    private int hs; //百分位秒數 亦即0.01秒
     private Counter counter;
     private TextView clock;
     private UIHandler uiHandler = new UIHandler();
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.listview);
 
         changeDisplay();
-        clock.setText(parseHS(hs));
+        clock.setText(parseHS(hs)); //初始設定上方時間顯示為0
         initLap();
     }
 
@@ -94,11 +94,11 @@ public class MainActivity extends AppCompatActivity {
         changeDisplay();
 
         if(isRunning) {
-            counter = new Counter();
+            counter = new Counter();    //每按一次start就一個新的計數任務
             timer.schedule(counter, 10, 10);
         }else{
-            counter.cancel();
-            counter = null;
+            counter.cancel();   //按下stop則取消,(週期任務被取消後無法重新開始跑)
+            counter = null;     //並回歸到null
         }
 
     }
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class UIHandler extends Handler {
+    private class UIHandler extends Handler {   //因為要呈現執行序的計數所以需要一個Handler
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -120,10 +120,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static String parseHS(int hs){
-        int phs = hs % 100; //小數點後
+        int phs = hs % 100; //小數點後  (100個hs即為1秒,故餘數就是小數點後)
         int ts = hs / 100;  //總秒數
-        int hh = ts / (60*60);
-        int mm = (ts - hh*60*60) / 60;
+        int hh = ts / (60*60);  //一小時共60*60秒
+        int mm = (ts - hh*60*60) / 60;  //一分鐘為總秒數去掉(要拿去當hh的秒數)後,除以60
         int ss = ts % 60;
 
         return String.format("%s:%s:%s:%s",
